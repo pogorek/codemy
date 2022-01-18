@@ -19,4 +19,9 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", include("theblog.urls")),
+    # django.cont... ogarnia login, logout itp i to musi byc pierwsze
+    path("members/", include("django.contrib.auth.urls")),
+    # LOGIN_REDIRECT_URL = 'home' w settings.py
+    # jak powyzej nie znajdzie url z members to sprawdzi tu
+    path("members/", include("members.urls")),
 ]
