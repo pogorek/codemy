@@ -1,24 +1,16 @@
 {% extends "layout.html" %}
 
-{% block title %}Update Blog Post!{% endblock %}
+{% block title %}Edit profile{% endblock %}
 
 {% block body %}
 
-{% if user.is_authenticated and user.id == post.author.id %}
-<h1>Edit Post</h1>
+<h1>Edit profile...</h1>
 <br /><br />
 <div class="form-group">
     <form method="post">
         {% csrf_token %}
-        {{ form.media }}
         {{ form.as_p }}
         <button class="btn btn-secondary">Update</button>
     </form>
 </div>
-{% else %}
-
-You are not logged in.
-
-{% endif %}
-
 {% endblock %}

@@ -4,7 +4,7 @@
 
 {% block body %}
 
-{% if user.is_authenticated %}
+{% if user.is_authenticated and user.id == post.author.id %}
 <h1>Remove Post</h1>
 <br /><br />
 <h3>Delete: {{ post.title }}</h3>

@@ -1,10 +1,13 @@
 import re
-from django.shortcuts import render
+# get_object_or_404 - get object and if id does not exist - 404
+from django.shortcuts import render, get_object_or_404
 # for CBV
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Post, Category
 from .forms import PostForm, EditForm
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
+# for LikeView
+from django.http import HttpResponseRedirect
 
 
 # Create your views here.
@@ -34,6 +37,29 @@ class ArticleDetailView(DetailView):
     model = Post
     template_name = "article_details.html"
 
+    # przesyłanie argumentow jak w funkcji {"oko": oko}
+    def get_context_data(self, *args, **kwargs):
+        # zapytanie o wszystkie obiekty w klassie Category
+        cat_menu = Category.objects.all()
+        # ??
+        context = super(ArticleDetailView, self).get_context_data(
+            *args, **kwargs)
+        # ???
+        context["cat_menu"] = cat_menu
+
+        # get from post table, a post with pk of post that page we are currently on
+        temp = get_object_or_404(Post, id=self.kwargs["pk"])
+        total_likes = temp.total_likes()
+        context["total_likes"] = total_likes
+
+        # like/unlike
+        liked = False
+        if temp.likes.filter(id=self.request.user.id).exists():
+            liked = True
+        context["liked"] = liked
+
+        return context
+
 
 class AddPostView(CreateView):
     model = Post
@@ -43,6 +69,11 @@ class AddPostView(CreateView):
     # fields = "__all__"
     # nie trzeba wszystkich fields, mozna wybrac, moga byc () lub []
     # fields = ("title", "author", "body")
+
+    # ustawia zalogowanego uzytkownika jako autora
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
 
 
 class AddCategoryView(CreateView):
@@ -97,3 +128,20 @@ def CategoryListView(request):
     return render(request, "category_list.html", {
         "cat_menu_list": cat_menu_list,
     })
+
+
+def LikeView(request, pk):
+    # get id from form, check in post table which post it is, then assign it to post var
+    # z komentow - post = Post.objects.get(id=pk)
+    post = get_object_or_404(Post, id=request.POST.get("post_id"))
+
+    liked = False
+    # if already liked, after clicking, remove like - unlike
+    if post.likes.filter(id=request.user.id).exists():
+        post.likes.remove(request.user)
+        liked = False
+    else:
+        # save like to the table, from who it is
+        post.likes.add(request.user)
+        liked = True
+    return HttpResponseRedirect(reverse("article_detail", args=[str(pk)]))

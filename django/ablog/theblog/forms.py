@@ -29,23 +29,25 @@ class PostForm(forms.ModelForm):
         # w jakim modelu ma dodac atrybuty
         model = Post
         # jakie pola maja byc w tej klasie
-        fields = ("title", "title_tag", "author", "category", "body")
+        fields = ("title", "title_tag", "category", "body", "snippet")
 
         # dodaje atrybuty do pol okreslonych w modelu
         widgets = {
             "title": forms.TextInput(attrs={"class": "form-control", "placeholder": "Title of Post"}),
             "title_tag": forms.TextInput(attrs={"class": "form-control"}),
-            "author": forms.Select(attrs={"class": "form-control"}),
+            # aurhor usuniety bo w views.py funkcja dodaje aktualnie zalogowanego
+            # "author": forms.Select(attrs={"class": "form-control"}),
             # choices musi byc pierwsze, choices i nazwa listy mozliwosci
             "category": forms.Select(choices=cat_choices_list, attrs={"class": "form-control"}),
             "body": forms.Textarea(attrs={"class": "form-control"}),
+            "snippet": forms.TextInput(attrs={"class": "form-control"}),
         }
 
 
 class EditForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ("title", "category", "body",)
+        fields = ("title", "category", "body", "snippet",)
 
         # dodaje atrybuty do pol okreslonych w modelu
         widgets = {
@@ -53,4 +55,5 @@ class EditForm(forms.ModelForm):
             # "title_tag": forms.TextInput(attrs={"class": "form-control"}),
             # "author": forms.Select(attrs={"class": "form-control"}),
             "body": forms.Textarea(attrs={"class": "form-control"}),
+            "snippet": forms.Textarea(attrs={"class": "form-control"}),
         }

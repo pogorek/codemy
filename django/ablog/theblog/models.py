@@ -3,6 +3,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
 from datetime import datetime, date
+# trzeba dodac do settings.py - installed apps - 'ckeditor', a w .html - {{ form.media }}
+from ckeditor.fields import RichTextField
 
 
 # Create your models here.
@@ -27,12 +29,17 @@ class Post(models.Model):
     title = models.CharField(max_length=255)  # , default="My Awesome Blog")
     title_tag = models.CharField(max_length=255)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    body = models.TextField()
+    body = RichTextField(blank=True, null=True)
+    # wersja bez RichTextField
+    # body = models.TextField()
     # dodajemy date , problem z utworzonymi wczesniej postami w konsoli 1 i enter, w video DateField
     post_date = models.DateTimeField(auto_now_add=True)
     # category = models.CharField(max_length=255, default="unknown")
     category = models.ForeignKey(
         Category, max_length=60, on_delete=models.CASCADE, related_name='catego')
+    likes = models.ManyToManyField(User, related_name="blog_posts")
+    # usuwamy default po piejwszej migrate by w starych postach wypelnilo sie to pole
+    snippet = models.CharField(max_length=255)  # , default="Old Post")
 
     def __str__(self):
         return f"{self.title} | {self.author}"
@@ -42,3 +49,7 @@ class Post(models.Model):
         # to przekierowuje na strone artykulu, dodaje argument
         # return reverse("article_detail", args=(str(self.id)))
         return reverse("home")
+
+    # zwraca likcze polubien posta
+    def total_likes(self):
+        return self.likes.count()
