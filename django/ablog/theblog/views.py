@@ -63,17 +63,22 @@ class ArticleDetailView(DetailView):
 
 class AddPostView(CreateView):
     model = Post
-    form_class = PostForm
+    # form_class = Post   request.POST,request.FILES)
     template_name = "add_post.html"
     # przez uzycie PostForm nie dodajemy fields
     # fields = "__all__"
     # nie trzeba wszystkich fields, mozna wybrac, moga byc () lub []
-    # fields = ("title", "author", "body")
+    fields = ("title", "author", "body")
 
     # ustawia zalogowanego uzytkownika jako autora
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
+
+# mozliwe rozwiazanie
+# def AddPostView(request):
+#     if request.method == 'POST':
+#         form = PostForm(request.POST, request.FILES)
 
 
 class AddCategoryView(CreateView):

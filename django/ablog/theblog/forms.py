@@ -29,7 +29,8 @@ class PostForm(forms.ModelForm):
         # w jakim modelu ma dodac atrybuty
         model = Post
         # jakie pola maja byc w tej klasie
-        fields = ("title", "title_tag", "category", "body", "snippet")
+        fields = ("title", "title_tag", "category",
+                  "header_image", "body", "snippet")
 
         # dodaje atrybuty do pol okreslonych w modelu
         widgets = {

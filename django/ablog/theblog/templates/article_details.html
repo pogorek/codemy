@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-
+{% load static %}
 {% block title %}{{ post.title_tag }}{% endblock %}
 
 {% block body %}
@@ -21,6 +21,11 @@
 
 
 <hr><br />
+<!-- dla zdjecia -->
+{% if post.header_image %}
+<img src="{{ post.header_image.url }}" style="max-width: 500px;">
+{% endif %}
+
 {{ post.body | safe}}
 <br />
 <br />
@@ -41,5 +46,38 @@
     {% endif %}
     - {{ total_likes }} likes
 </form>
+
+<br /><br />
+
+<div class="card mb-3">
+    <div class="row g-0">
+        <div class="col-md-2">
+            {% if post.author.profile.profile_pic %}
+            <img src="{{ post.author.profile.profile_pic.url }}" class="img-fluid rounded-start" alt="profile_pic">
+            {% else %}
+            <img src="{% static 'theblog/images/default_profile_pic.jpg' %}" class="img-fluid rounded-start" alt="profile_pic">
+            {% endif %}
+        </div>
+        <div class="col-md-10">
+            <div class="card-body">
+                <h5 class="card-title">
+                    {{ post.author.first_name }} {{ post.author.last_name }}
+                </h5>
+                <p class="small text-muted">
+                    <a href="{% url 'show_profile_page' post.author.profile.id %}">Profile Page</a> |
+
+                    {% if post.author.profile.fb_url %}
+                    <a href="{{ post.author.profile.fb_url }}">
+                        Facebook</a>
+                    {% endif %}
+                    | Twitter | Instagram | Youtube
+                </p>
+                {% if post.author.profile.bio %}
+                <p class="card-text">{{ post.author.profile.bio }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}

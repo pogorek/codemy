@@ -16,6 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+# dla zdjec
+from django.conf import settings
+from django.conf.urls.static import static
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", include("theblog.urls")),
@@ -24,4 +28,5 @@ urlpatterns = [
     # LOGIN_REDIRECT_URL = 'home' w settings.py
     # jak powyzej nie znajdzie url z members to sprawdzi tu
     path("members/", include("members.urls")),
-]
+    # ponizej dla zdjec
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

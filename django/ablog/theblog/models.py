@@ -25,8 +25,23 @@ class Category(models.Model):
         return reverse("home")
 
 
+# rozwiniecie profilu uzytkownika
+class Profile(models.Model):
+    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
+    bio = models.TextField()
+    profile_pic = models.ImageField(
+        null=True, blank=True, upload_to="images/profile/")
+    website_url = models.CharField(max_length=255, null=True, blank=True)
+    fb_url = models.CharField(max_length=255, null=True, blank=True)
+
+    def __str__(self):
+        return str(self.user)
+
+
 class Post(models.Model):
     title = models.CharField(max_length=255)  # , default="My Awesome Blog")
+    header_image = models.ImageField(
+        null=True, blank=True, upload_to="images/")
     title_tag = models.CharField(max_length=255)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     body = RichTextField(blank=True, null=True)
