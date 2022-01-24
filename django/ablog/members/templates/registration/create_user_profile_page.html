@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block title %}Create a new Profile{% endblock %}
+
+{% block body %}
+
+{% if user.is_authenticated %}
+<h1>Create a new Profile</h1>
+<br /><br />
+<!-- Dodaje mozliwosc dodawania zdjec -->
+<div class="form-group" enctype="multipart/form-data">
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="btn btn-secondary">Create Profile</button>
+    </form>
+</div>
+{% else %}
+
+You are not logged in.
+
+{% endif %}
+
+{% endblock %}

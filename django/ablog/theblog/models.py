@@ -37,6 +37,11 @@ class Profile(models.Model):
     def __str__(self):
         return str(self.user)
 
+    def get_absolute_url(self):
+        # to przekierowuje na strone artykulu, dodaje argument
+        # return reverse("article_detail", args=(str(self.id)))
+        return reverse("home")
+
 
 class Post(models.Model):
     title = models.CharField(max_length=255)  # , default="My Awesome Blog")
@@ -68,3 +73,14 @@ class Post(models.Model):
     # zwraca likcze polubien posta
     def total_likes(self):
         return self.likes.count()
+
+
+class Comment(models.Model):
+    post = models.ForeignKey(
+        Post, on_delete=models.CASCADE, related_name="comments")
+    name = models.CharField(max_length=255)
+    body = models.TextField()
+    date_added = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return "%s - %s" % (self.post.title, self.name)

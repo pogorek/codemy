@@ -48,6 +48,22 @@
 </form>
 
 <br /><br />
+<hr>
+<h2>Comments...</h2>
+<br />
+{% if not post.comments.all %}
+    No comments yet <a href="#">Add one</a>
+    {% else %}
+        {% for comment in post.comments.all %}
+            <div class="bg-light p-2">
+                <strong>{{ comment.name }} - {{comment.date_added}}</strong>
+                <br />
+                {{ comment.body }}
+            </div>
+            <br/>        
+        {% endfor %}
+{% endif %}
+<hr>
 
 <div class="card mb-3">
     <div class="row g-0">
