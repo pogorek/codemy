@@ -3,8 +3,8 @@ import re
 from django.shortcuts import render, get_object_or_404
 # for CBV
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Post, Category
-from .forms import PostForm, EditForm
+from .models import Post, Category, Comment
+from .forms import PostForm, EditForm, CommentForm
 from django.urls import reverse_lazy, reverse
 # for LikeView
 from django.http import HttpResponseRedirect
@@ -63,22 +63,37 @@ class ArticleDetailView(DetailView):
 
 class AddPostView(CreateView):
     model = Post
-    # form_class = Post   request.POST,request.FILES)
+    form_class = PostForm  # request.POST,request.FILES)
     template_name = "add_post.html"
     # przez uzycie PostForm nie dodajemy fields
     # fields = "__all__"
     # nie trzeba wszystkich fields, mozna wybrac, moga byc () lub []
-    fields = ("title", "author", "body")
+    #fields = ("title", "body")
 
     # ustawia zalogowanego uzytkownika jako autora
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
 
-# mozliwe rozwiazanie
-# def AddPostView(request):
-#     if request.method == 'POST':
-#         form = PostForm(request.POST, request.FILES)
+
+class AddCommentView(CreateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = "add_comment.html"
+    #success_url = reverse_lazy("home")
+    # przez uzycie PostForm nie dodajemy fields
+    # fields = "__all__"
+    # nie trzeba wszystkich fields, mozna wybrac, moga byc () lub []
+    #fields = ("title", "body")
+
+    # ustawia id posta z kwargs
+    def form_valid(self, form):
+        form.instance.post_id = self.kwargs["pk"]
+        return super().form_valid(form)
+
+    # przekierowuje na strone posta po dodaniu kommenta
+    def get_success_url(self):
+        return reverse_lazy('article_detail', kwargs={'pk': self.kwargs['pk']})
 
 
 class AddCategoryView(CreateView):

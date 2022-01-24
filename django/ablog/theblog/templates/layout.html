@@ -27,38 +27,10 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     {% if user.is_authenticated %}
                     <li class="nav-item nav-link">Logged in as {{ user.username }}</li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'add_post' %}">Add post</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'add_category' %}">Add Category</a>
-                    </li>
 
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Profile
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="{% url 'edit_profile' %}">Edit Settings</a></li>
-                            {% if user.profile.id %}
-                            <li><a class="dropdown-item" href="{% url 'edit_profile_page' user.profile.id %}">Edit Profile Page</a></li>
-                            <li><a class="dropdown-item" href="{% url 'show_profile_page' user.profile.id %}">Show Profile Page</a></li>
-                            {% else %}
-                            <li><a class="dropdown-item" href="{% url 'create_profile_page' %}">Create Profile Page</a></li>
-                            {% endif %}
-
-                        </ul>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'logout' %}">Logout</a>
-                    </li>
                     {% else %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'register' %}">Register</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login' %}">Login</a>
                     </li>
                     {% endif %}
                     <!-- Category Menu -->
@@ -74,7 +46,9 @@
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-
+                            <li>
+                                <a class="dropdown-item" href="{% url 'add_category' %}">Add Category</a>
+                            </li>
                         </ul>
                     </li>
                     {% else %}
@@ -83,6 +57,40 @@
                     </li>
                     {% endif %}
                 </ul>
+                {% if user.is_authenticated %}
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'add_post' %}">Add post</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            {{ user.first_name }} {{ user.last_name }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="{% url 'edit_profile' %}">Edit Settings</a></li>
+                            {% if user.profile.id %}
+                            <li><a class="dropdown-item" href="{% url 'edit_profile_page' user.profile.id %}">Edit Profile Page</a></li>
+                            <li><a class="dropdown-item" href="{% url 'show_profile_page' user.profile.id %}">Show Profile Page</a></li>
+                            {% else %}
+                            <li><a class="dropdown-item" href="{% url 'create_profile_page' %}">Create Profile Page</a></li>
+                            {% endif %}
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- <li class="nav-item"> &nbsp; &nbsp; &nbsp;</li> -->
+                </ul>
+                {% else %}
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Login</a>
+                    </li>
+                </ul>
+                {% endif %}
             </div>
         </div>
     </nav>
